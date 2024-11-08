@@ -1,14 +1,29 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import Feed from './features/inspireFeed/Feed.tsx'
 import store from './store/index';
+import Layout from './Layout.jsx';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import './index.css'
+import './App.css'
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: < Feed />,
+  },
+]);
 
 createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  <React.StrictMode >
     <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>
+      <Layout>
+        <RouterProvider router={router} />
+      </Layout >
+    </Provider >
+  </React.StrictMode >
 )

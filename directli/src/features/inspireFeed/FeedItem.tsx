@@ -14,7 +14,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import image from '../../assets/sampleWoman.jpg'
+import image from '../../assets/verticalWoman.jpg'
+import { FeedItemProps } from '../types.ts'
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -44,17 +45,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   ],
 }));
 
-const details = {
-  desc: '',
-  postType: '',
-  subReq: '',
-  postLen: 0,
-  Gender: '',
-  Light: '',
-  rights: ''
-  }
-
-export default function FeedItem() {
+export default function FeedItem({details}: FeedItemProps) {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -62,7 +53,7 @@ export default function FeedItem() {
   };
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 500, display: 'flex', flexDirection: 'column'}}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -74,18 +65,18 @@ export default function FeedItem() {
             <MoreVertIcon />
           </IconButton>
         }
-        title="Make a confession!"
-        subheader="Posted November 4, 2024"
+        title={details.title}
+        subheader={details.date}
       />
       <CardMedia
         component="img"
-        height="194"
+        height="300"
         image={image}
         alt="Confession"
       />
-      <CardContent>
+      <CardContent sx={{ flexGrow: 1 }}>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Uh oh, time to confess! Put on your best "I'm sorry!" face and make your submission now.
+          {details.brief}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -107,22 +98,22 @@ export default function FeedItem() {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography sx={{ marginBottom: 2 }}>
-            Submit a short video of yourself making a confession about yourself or your life. Have fun with this prompt - keep it light and don't take yourself too seriously! Confession must be your own: no 'confessing' on behalf of friends or family, please!
+            {details.desc}
           </Typography>
           <Typography sx={{ marginBottom: 2 }}>
-            Post type: <strong>Public</strong> <br></br>
+            Post type: <strong>{details.postType}</strong> <br></br>
             Any verified creator can submit a post and get paid instantly.
           </Typography>
           <Typography sx={{ marginBottom: 2 }}>
             Submission requirements: <br></br>
-            Post Length: <strong>20 - 45 seconds</strong> <br></br>
-            Gender: <strong>Female preferred</strong> <br></br>
-            Lighting: <strong>Must have Ring light</strong>
+            Post Length: <strong>{details.postLenMin} - {details.postLenMax} seconds</strong> <br></br>
+            {details.gender !== undefined ? <div>Gender: <strong>{details.gender}</strong> <br></br></div> : <div></div>}
+            {details.lighting !== undefined ? <div>Lighting: <strong>{details.lighting}</strong></div> : <div></div>}
           </Typography>
           <Typography sx={{ marginBottom: 2 }}>
             Rights/Limitations:<br></br>
-            Public Use: Video will be displayed publically on the feed, viewable by anyone.
-            Copyright: Video will not be used for commercial purposes without explicit release from creators.
+            Public Use: {details.rights}<br></br>
+            Copyright: {details.copy}
           </Typography>
         </CardContent>
       </Collapse>
