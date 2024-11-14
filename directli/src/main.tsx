@@ -2,6 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client'
 import Feed from './features/inspireFeed/Feed.tsx'
+import RequestContainer from './features/request/RequestContainer.tsx'
 import store from './store/index';
 import Layout from './Layout.jsx';
 import {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
     path: "/",
     element: < Feed />,
   },
+  {
+    path: '/request',
+    element: <RequestContainer />
+  }
 ]);
 
 createRoot(document.getElementById('root')!).render(

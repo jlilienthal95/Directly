@@ -3,5 +3,19 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  // "compilerOptions": {
+  //   "target": "ES6",
+  //   "module": "CommonJS",
+  //   "strict": true,
+  //   "esModuleInterop": true,
+  //   "skipLibCheck": true,
+  //   "forceConsistentCasingInFileNames": true,
+  //   "outDir": "./dist",
+  //   "baseUrl": ".",
+  //   "resolveJsonModule": true,
+  //   "moduleResolution": "node"
+  // },
+  // "include": ["src/**/*"],
+  // "exclude": ["node_modules"]
 }

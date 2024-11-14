@@ -7,6 +7,7 @@ import Paper from '@mui/material/Paper';
 import HomeIcon from '@mui/icons-material/Home';
 import AddIcon from '@mui/icons-material/Add';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import { Link } from 'react-router-dom';
 
 
 export default function FixedBottomNavigation() {
@@ -24,7 +25,7 @@ export default function FixedBottomNavigation() {
           }}
         >
           <BottomNavigationAction icon={<HomeIcon fontSize='large' />} />
-          <BottomNavigationAction icon={<AddIcon fontSize='large'/>} />
+          <BottomNavigationAction icon={<AddIcon fontSize='large'/>}  />
           <BottomNavigationAction icon={<CameraAltIcon fontSize='large'/>} />
           <BottomNavigationAction icon={<FavoriteIcon fontSize='large'/>} />
         </BottomNavigation>
