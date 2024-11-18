@@ -1,8 +1,7 @@
-const { Client } = require("pg");
-
+const { Pool } = require("pg");
 require('dotenv').config();
 
-const client = new Client({
+const pool = new Pool({
     host: "127.0.0.1",
     user: process.env.PGDB_USER,
     port: 3001,
@@ -10,12 +9,12 @@ const client = new Client({
     database: 'Directly'
 });
 
-client.connect((err) => {
-    if(err){
-        console.error("Error connecting to the database:", err);
-    } else{
-        console.log('Connected to PostgreSQL DB.');
-    }
+pool.on('connect', () => {
+    console.log('Connected to PostgreSQL DB.');
 });
 
-module.exports = client;
+pool.on('error', (err) => {
+    console.error('Unexpected error on idle PostgreSQL client', err);
+});
+
+module.exports = pool; //Exporting pool for use in GraphQL Resolvers

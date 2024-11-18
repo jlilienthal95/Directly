@@ -1,28 +1,21 @@
-// schema.js
-const { Pool } = require('pg');
-
-// Assuming you're using PostgreSQL
-const pool = new Pool();  // Connection to your PostgreSQL database
+const inputTypes = require('./inputTypes/inputTypes')
 
 // SDL Schema definition
 const typeDefs = `#graphql
-  # Define Category Type
   type Category {
     categoryID: ID!
-    value: String!
+    text: String!
   }
 
-  # Define Comment Type
   type Comment {
     commentID: ID!
     requestID: ID!
     userID: ID!
     datePosted: String!
-    value: String!
+    text: String!
     likes: Int!
   }
 
-  # Define Notification Type
   type Notification {
     notificationID: ID!
     userID: ID!
@@ -32,7 +25,6 @@ const typeDefs = `#graphql
     dateCreated: String!
   }
 
-  # Define Request Type
   type Request {
     requestID: ID!
     categoryID: Int
@@ -40,21 +32,19 @@ const typeDefs = `#graphql
     requestedBy: String!
     datePosted: String!
     brief: String
-    desc: String
+    descript: String
     postLenMin: Int
     postLenMax: Int!
     likes: Int!
   }
 
-  # Define Requirement Type
   type Requirement {
     requirementID: ID!
     requestID: ID!
     type: String!
-    value: String!
+    text: String!
   }
 
-  # Define Scene Type
   type Scene {
     sceneID: ID!
     requestID: ID!
@@ -67,22 +57,19 @@ const typeDefs = `#graphql
     resolution: String!
   }
 
-  # Define Tag Type
   type Tag {
     tagID: ID!
-    value: String!
+    text: String!
   }
 
-  # Define Transaction Type
   type Transaction {
     transactionID: ID!
     paidByID: ID!
     paidToID: ID!
-    value: Int!
+    amount: Int!
     paymentDate: String!
   }
 
-  # Define User Type
   type User {
     userID: ID!
     nameFirst: String!
@@ -96,7 +83,6 @@ const typeDefs = `#graphql
     profPicUrl: String
   }
 
-  # Define Queries
   type Query {
     categoryQueries: [Category]
     commentQueries: [Comment]
@@ -106,12 +92,12 @@ const typeDefs = `#graphql
     sceneQueries: [Scene]
     tagQueries: [Tag]
     transactionQueries: [Transaction]
-    userQueries: [User]
+    usersFindAll: [User]
+    userFindOne(id: ID!): User
   }
 
-  # Define Mutations
   type Mutation {
-    categoryMutation: Category
+    categoryCreate(input: CategoryInput): Category
     commentMutation: Comment
     notificationMutation: Notification
     requestMutation: Request
@@ -119,12 +105,9 @@ const typeDefs = `#graphql
     sceneMutation: Scene
     tagMutation: Tag
     transactionMutation: Transaction
-    userMutation: User
+    userCreate(input: UserInput): User
   }
-
 `;
 
-module.exports = {
-  typeDefs,
-  pool, // Exporting pool for database interaction, you can use it to query your DB in resolvers
-};
+
+module.exports = typeDefs + inputTypes;
