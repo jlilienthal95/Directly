@@ -9,8 +9,9 @@ const typeDefs = `#graphql
 
   type Comment {
     commentID: ID!
-    requestID: ID!
     userID: ID!
+    relatedItemID: ID!
+    relatedItemType: ContentType!
     datePosted: String!
     text: String!
     likes: Int!
@@ -27,9 +28,9 @@ const typeDefs = `#graphql
 
   type Request {
     requestID: ID!
-    categoryID: Int
+    requestedBy: ID!
+    categoryID: ID
     title: String!
-    requestedBy: String!
     datePosted: String!
     brief: String
     descript: String
@@ -49,8 +50,8 @@ const typeDefs = `#graphql
     sceneID: ID!
     requestID: ID!
     createdByID: ID!
-    sceneURL: String!
-    thumbnailURL: String
+    sceneUrl: String!
+    thumbnailUrl: String
     dateSubmitted: String!
     status: String!
     duration: Int!
@@ -84,28 +85,74 @@ const typeDefs = `#graphql
   }
 
   type Query {
-    categoryQueries: [Category]
-    commentQueries: [Comment]
-    notificationQueries: [Notification]
-    requestQueries: [Request]
-    requirementQueries: [Requirement]
-    sceneQueries: [Scene]
-    tagQueries: [Tag]
-    transactionQueries: [Transaction]
+    #Fetch Queries
+    categoryFindAll: [Category]
+    categoryFindOne(id: ID!): Category
+    commentsFindAll: [Comment]
+    commentFindOne(id: ID!): Comment
+    notificationsFindAll: [Notification]
+    notificationFindOne: Notification
+    requestsFindAll: [Request]
+    requestFindOne(id: ID!): Request
+    requirementsFindAll: [Requirement]
+    requirementFindOne(id: ID!): Requirement
+    scenesFindAll: [Scene]
+    sceneFindOne(id: ID!): Scene
+    tagsFindAll: [Tag]
+    tagFindOne(id: ID!): Tag
+    transactionsFindAll: [Transaction]
+    transactionFindOne(id: ID!): Transaction
     usersFindAll: [User]
     userFindOne(id: ID!): User
   }
 
   type Mutation {
+    #Create Mutations
     categoryCreate(input: CategoryInput): Category
-    commentMutation: Comment
-    notificationMutation: Notification
-    requestMutation: Request
-    requirementMutation: Requirement
-    sceneMutation: Scene
-    tagMutation: Tag
-    transactionMutation: Transaction
+    commentCreate(input: CommentInput): Comment
+    notificationCreate(input: NotificationInput): Notification
+    requestCreate(input: RequestInput): Request
+    requirementCreate(input: RequirementInput): Requirement
+    sceneCreate(input: SceneInput): Scene
+    tagCreate(input: TagInput): Tag
+    transactionCreate(input: TransactionInput): Transaction
     userCreate(input: UserInput): User
+
+    #Edit Mutations
+    categoryEdit(id: ID!, input: CategoryEditInput!): Category,
+    commentEdit(id: ID!, input: CommentEditInput!): Comment,
+    notificationEdit(id: ID!, input: NotificationEditInput!): Notification,
+    requestEdit(id: ID!, input: RequestEditInput!): Request,
+    requirementEdit(id: ID!, input: RequirementEditInput!): Requirement,
+    sceneEdit(id: ID!, input: SceneEditInput!): Scene,
+    tagEdit(id: ID!, input: TagEditInput!): Tag,
+    transactionEdit(id: ID!, input: TransactionEditInput!): Transaction,
+    userEdit(id: ID!, input: UserEditInput!): User
+    
+    #Delete Mutations
+    categoryDelete(id: ID!): Category,
+    commentDelete(id: ID!): Comment,
+    notificationDelete(id: ID!): Notification,
+    requestDelete(id: ID!): Request,
+    requirementDelete(id: ID!): Requirement,
+    sceneDelete(id: ID!): Scene,
+    tagDelete(id: ID!): Tag,
+    transactionDelete(id: ID!): Transaction,
+    userDelete(id: ID!): User
+
+  }
+
+  #enums
+  enum ContentType {
+    Request,
+    Scene,
+    Account
+  }
+
+  enum SceneStatus {
+    Pending,
+    Approved,
+    Rejected
   }
 `;
 
