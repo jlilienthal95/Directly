@@ -28,7 +28,7 @@ const typeDefs = `#graphql
 
   type Request {
     requestID: ID!
-    requestedBy: ID!
+    requestedByID: ID!
     categoryID: ID
     title: String!
     datePosted: String!
@@ -37,6 +37,7 @@ const typeDefs = `#graphql
     postLenMin: Int
     postLenMax: Int!
     likes: Int!
+    scenes: [Scene!]
   }
 
   type Requirement {
@@ -67,7 +68,7 @@ const typeDefs = `#graphql
     transactionID: ID!
     paidByID: ID!
     paidToID: ID!
-    amount: Int!
+    amount: Float!
     paymentDate: String!
   }
 
@@ -82,27 +83,31 @@ const typeDefs = `#graphql
     dob: String!
     bio: String!
     profPicUrl: String
+    requests: [Request!]
+    scenes: [Scene!]
+    comments: [Comment!]
+    notifications: [Notification!]
   }
 
   type Query {
     #Fetch Queries
     categoryFindAll: [Category]
     categoryFindOne(id: ID!): Category
-    commentsFindAll: [Comment]
+    commentFindAll: [Comment]
     commentFindOne(id: ID!): Comment
-    notificationsFindAll: [Notification]
-    notificationFindOne: Notification
-    requestsFindAll: [Request]
+    notificationFindAll: [Notification]
+    notificationFindOne(id: ID!): Notification
+    requestFindAll: [Request]
     requestFindOne(id: ID!): Request
-    requirementsFindAll: [Requirement]
+    requirementFindAll: [Requirement]
     requirementFindOne(id: ID!): Requirement
-    scenesFindAll: [Scene]
+    sceneFindAll: [Scene]
     sceneFindOne(id: ID!): Scene
-    tagsFindAll: [Tag]
+    tagFindAll: [Tag]
     tagFindOne(id: ID!): Tag
-    transactionsFindAll: [Transaction]
+    transactionFindAll: [Transaction]
     transactionFindOne(id: ID!): Transaction
-    usersFindAll: [User]
+    userFindAll: [User]
     userFindOne(id: ID!): User
   }
 

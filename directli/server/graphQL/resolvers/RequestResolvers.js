@@ -1,76 +1,33 @@
-const pool = require('../../db/db');
-const errorCatch = require('../errorCatch');
+const { createEntry, findAll, findOne, editEntry, deleteEntry, findAllByColumn } = require('./dbHelpers');
 
-const requestResolvers = {};
+const requestResolvers = {
+  // Fetch all requests
+  requestFindAll: async () => findAll('Request'),
 
-// Queries return entries in DB Table
-requestResolvers.requestsFindAll = async () => {
-    try {
-        const result = await pool.query('SELECT * FROM "Request"');
-        return result.rows;
-    } catch (err) {
-        errorCatch(err, 'Request', 'fetch');
-    }
-};
+  // Fetch a single request by ID
+  requestFindOne: async (_, { id }) => findOne('Request', 'requestID', id),
 
-requestResolvers.requestFindOne = async (_, args) => {
-    try {
-        const query = `
-            SELECT *
-            FROM "Request"
-            WHERE "requestID" = $1
-        `;
-        const values = [args.id];
-        const result = await pool.query(query, values);
-        return result.rows[0];
-    } catch (err) {
-        errorCatch(err, 'Request', 'fetch');
-    }
-};
+  // Fetch the scenes for a request
+  requestScenes: async (parent) => findAllByColumn('Scene', 'requestID', parent.requestID),
 
-// Mutations create or edit entries in DB
-requestResolvers.requestCreate = async (_, { input }, context) => {
-    const {
-        requestedBy,
-        categoryID,
-        title,
-        datePosted,
-        brief,
-        descript,
-        postLenMin,
-        postLenMax,
-    } = input;
+  // Create a new request
+  requestCreate: async (_, { input }) => {
+    const { categoryID, requestedByID, title, brief, descript, postLenMin, postLenMax } = input;
+    // Define fields and values, excluding datePosted which is handled by PostgreSQL
+    const fields = ['categoryID', 'requestedByID', 'title','brief', 'descript', 'postLenMin', 'postLenMax'];
+    const values = [categoryID, requestedByID, title, brief, descript, postLenMin, postLenMax];
+    return createEntry('Request', fields, values); // Let PostgreSQL handle datePosted
+  },
 
-    try {
-        const query = `
-            INSERT INTO "Request" (
-                "categoryID",
-                "requestedBy",
-                "title",
-                "datePosted",
-                "brief",
-                "descript",
-                "postLenMin",
-                "postLenMax"
-            )
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-            RETURNING *
-        `;
-        const values = [
-            categoryID,
-            requestedBy,
-            title,
-            datePosted,
-            brief,
-            descript,
-            postLenMin,
-            postLenMax
-        ];
-        const result = await pool.query(query, values);
-        return result.rows[0];
-    } catch (err) {
-        errorCatch(err, 'Request', 'create');
-    }
+  // Edit an existing request
+  requestEdit: async (_, { id, input }) => {
+    const fields = Object.keys(input);
+    const values = Object.values(input);
+    return editEntry('Request', 'requestID', id, fields, values);
+  },
+
+  // Delete a request
+  requestDelete: async (_, { id }) => deleteEntry('Request', 'requestID', id),
 };
 
 module.exports = requestResolvers;

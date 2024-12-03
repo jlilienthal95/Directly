@@ -311,7 +311,7 @@ const data = {
         relatedItemID: "1",
         isRead: false,
         dateCreated: "2024-10-02",
-        type: "New comment on your request"
+        relatedItemType: "New comment on your request"
       },
       {
         notificationID: "2",

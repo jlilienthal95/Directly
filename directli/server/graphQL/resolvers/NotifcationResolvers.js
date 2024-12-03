@@ -1,63 +1,38 @@
-const pool = require('../../db/db');
-const errorCatch = require('../errorCatch');
+const { createEntry, findAll, findOne, editEntry, deleteEntry } = require('./dbHelpers');
 
-const notificationResolvers = {};
+const notificationResolvers = {
+  // Fetch all notifications
+  notificationFindAll: async () => {
+    return findAll('Notification');
+  },
 
-// Queries return entries in DB Table
-notificationResolvers.notificationsFindAll = async () => {
-    try {
-        const result = await pool.query('SELECT * FROM "Notification"');
-        return result.rows;
-    } catch (err) {
-        errorCatch(err, 'Notification', 'fetch');
-    }
-};
+  // Fetch a single notification by ID
+  notificationFindOne: async (_, { id }) => {
+    return findOne('Notification', 'notificationID', id);
+  },
 
-notificationResolvers.notificationFindOne = async (_, args) => {
-    try {
-        const query = `
-            SELECT *
-            FROM "Notification"
-            WHERE "notificationID" = $1
-        `;
-        const values = [args.id];
-        const result = await pool.query(query, values);
-        return result.rows[0];
-    } catch (err) {
-        errorCatch(err, 'Notification', 'fetch');
-    }
-};
+  // Create a new notification
+  notificationCreate: async (_, { input }) => {
+    const { userID, relatedItemID, relatedItemType } = input;
 
-// Mutations create or edit entries in DB
-notificationResolvers.notificationCreate = async (_, { input }, context) => {
-    const {
-        userID,
-        relatedItemID,
-        relatedItemType,
-        dateCreated
-    } = input;
-    try {
-        const query = `
-            INSERT INTO "Notification" (
-                "userID",
-                "relatedItemID",
-                "relatedItemType",
-                "dateCreated"
-            )
-            VALUES ($1, $2, $3, $4)
-            RETURNING *
-        `;
-        const values = [
-            userID,
-            relatedItemID,
-            relatedItemType,
-            dateCreated
-        ];
-        const result = await pool.query(query, values);
-        return result.rows[0];
-    } catch (err) {
-        errorCatch(err, 'Notification', 'create');
-    }
+    // Exclude dateCreated, as it will be handled by PostgreSQL automatically
+    const fields = ['userID', 'relatedItemID', 'relatedItemType'];
+    const values = [userID, relatedItemID, relatedItemType];
+
+    return createEntry('Notification', fields, values); // Let PostgreSQL handle dateCreated
+  },
+
+  // Edit an existing notification
+  notificationEdit: async (_, { id, input }) => {
+    const fields = Object.keys(input);
+    const values = Object.values(input);
+    return editEntry('Notification', 'notificationID', id, fields, values);
+  },
+
+  // Delete a notification
+  notificationDelete: async (_, { id }) => {
+    return deleteEntry('Notification', 'notificationID', id);
+  },
 };
 
 module.exports = notificationResolvers;

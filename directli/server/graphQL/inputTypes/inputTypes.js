@@ -19,15 +19,13 @@ const inputTypes = `#graphql
     userID: ID!
     relatedItemID: ID!
     relatedItemType: ContentType!
-    dateCreated: String!
   }
 
   # Request Table Input
   input RequestInput {
-    requestedBy: ID!
+    requestedByID: ID!
     categoryID: ID
     title: String!
-    datePosted: String!
     brief: String
     descript: String
     postLenMin: Int
@@ -47,7 +45,6 @@ const inputTypes = `#graphql
     createdByID: ID!
     sceneUrl: String!
     thumbnailUrl: String!
-    dateSubmitted: String!
     status: SceneStatus!
     duration: Int!
     resolution: String!
@@ -62,8 +59,7 @@ const inputTypes = `#graphql
   input TransactionInput {
     paidByID: ID!
     paidToID: ID!
-    amount: Int!
-    paymentDate: String!
+    amount: Float!
   }
 
   # User Table Input
@@ -91,6 +87,7 @@ const inputTypes = `#graphql
     relatedItemType: ContentType
     datePosted: String
     text: String
+    likes: Int
   }
 
   # Edit Notification Table Input (nullable fields for editing)
@@ -98,12 +95,13 @@ const inputTypes = `#graphql
     userID: ID
     relatedItemID: ID
     relatedItemType: ContentType
+    isRead: Boolean
     dateCreated: String
   }
 
   # Edit Request Table Input (nullable fields for editing)
   input RequestEditInput {
-    requestedBy: ID
+    requestedByID: ID
     categoryID: ID
     title: String
     datePosted: String

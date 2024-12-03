@@ -1,50 +1,38 @@
-const pool = require('../../db/db');
-const errorCatch = require('../errorCatch');
+const { createEntry, findAll, findOne, editEntry, deleteEntry } = require('./dbHelpers');
 
-const tagResolvers = {};
+const tagResolvers = {
+  // Fetch all tags
+  tagFindAll: async () => {
+    return findAll('Tag');
+  },
 
-// Queries to return entries from the Tag table
-tagResolvers.tagsFindAll = async () => {
-    try {
-        const result = await pool.query('SELECT * FROM "Tag"');
-        return result.rows;
-    } catch (err) {
-        errorCatch(err, 'Tag', 'fetch');
-    }
-};
+  // Fetch a single tag by ID
+  tagFindOne: async (_, { id }) => {
+    return findOne('Tag', 'tagID', id);
+  },
 
-tagResolvers.tagFindOne = async (_, args) => {
-    try {
-        const query = `
-            SELECT *
-            FROM "Tag"
-            WHERE "tagID" = $1
-        `;
-        const values = [args.id];
-        const result = await pool.query(query, values);
-        return result.rows[0];
-    } catch (err) {
-        errorCatch(err, 'Tag', 'fetch');
-    }
-};
-
-// Mutations to create or edit entries in the Tag table
-tagResolvers.tagCreate = async (_, { input }, context) => {
+  // Create a new tag
+  tagCreate: async (_, { input }) => {
     const { text } = input;
-    try {
-        const query = `
-            INSERT INTO "Tag" (
-                "text"
-            )
-            VALUES ($1)
-            RETURNING *
-        `;
-        const values = [text];
-        const result = await pool.query(query, values);
-        return result.rows[0];
-    } catch (err) {
-        errorCatch(err, 'Tag', 'create');
-    }
+
+    // Define fields and values
+    const fields = ['text'];
+    const values = [text];
+
+    return createEntry('Tag', fields, values);
+  },
+
+  // Edit an existing tag
+  tagEdit: async (_, { id, input }) => {
+    const fields = Object.keys(input);
+    const values = Object.values(input);
+    return editEntry('Tag', 'tagID', id, fields, values);
+  },
+
+  // Delete a tag
+  tagDelete: async (_, { id }) => {
+    return deleteEntry('Tag', 'tagID', id);
+  },
 };
 
 module.exports = tagResolvers;

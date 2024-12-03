@@ -1,76 +1,62 @@
-const pool = require('../../db/db');
-const errorCatch = require('../errorCatch');
+const { createEntry, findAll, findOne, editEntry, deleteEntry } = require('./dbHelpers');
 
-const sceneResolvers = {};
+const sceneResolvers = {
+  // Fetch all scenes
+  sceneFindAll: async () => {
+    return findAll('Scene');
+  },
 
-// Queries return entries in DB Table
-sceneResolvers.scenesFindAll = async () => {
-    try {
-        const result = await pool.query('SELECT * FROM "Scene"');
-        return result.rows;
-    } catch (err) {
-        errorCatch(err, 'Scene', 'fetch');
-    }
-};
+  // Fetch a single scene by ID
+  sceneFindOne: async (_, { id }) => {
+    return findOne('Scene', 'sceneID', id);
+  },
 
-sceneResolvers.sceneFindOne = async (_, args) => {
-    try {
-        const query = `
-            SELECT *
-            FROM "Scene"
-            WHERE "sceneID" = $1
-        `;
-        const values = [args.id];
-        const result = await pool.query(query, values);
-        return result.rows[0];
-    } catch (err) {
-        errorCatch(err, 'Scene', 'fetch');
-    }
-};
-
-// Mutations create or edit entries in DB
-sceneResolvers.sceneCreate = async (_, { input }, context) => {
-    const {
-        requestID,
-        createdByID,
-        sceneUrl,
-        thumbnailUrl,
-        dateSubmitted,
-        status,
-        duration,
-        resolution
+  // Create a new scene
+  sceneCreate: async (_, { input }) => {
+    const { 
+      requestID, 
+      createdByID, 
+      sceneUrl, 
+      thumbnailUrl, 
+      status, 
+      duration, 
+      resolution 
     } = input;
 
-    try {
-        const query = `
-            INSERT INTO "Scene" (
-                "requestID",
-                "createdByID",
-                "sceneUrl",
-                "thumbnailUrl",
-                "dateSubmitted",
-                "status",
-                "duration",
-                "resolution"
-            )
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-            RETURNING *
-        `;
-        const values = [
-            requestID,
-            createdByID,
-            sceneUrl,
-            thumbnailUrl,
-            dateSubmitted,
-            status,
-            duration,
-            resolution
-        ];
-        const result = await pool.query(query, values);
-        return result.rows[0];
-    } catch (err) {
-        errorCatch(err, 'Scene', 'create');
-    }
+    // Exclude dateSubmitted, as it will be handled by PostgreSQL automatically
+    const fields = [
+      'requestID',
+      'createdByID',
+      'sceneUrl',
+      'thumbnailUrl',
+      'status',
+      'duration',
+      'resolution'
+    ];
+    const values = [
+      requestID,
+      createdByID,
+      sceneUrl,
+      thumbnailUrl,
+      status,
+      duration,
+      resolution
+    ];
+
+    return createEntry('Scene', fields, values); // Let PostgreSQL handle dateSubmitted
+  },
+
+  // Edit an existing scene
+  sceneEdit: async (_, { id, input }) => {
+    const fields = Object.keys(input);
+    const values = Object.values(input);
+    return editEntry('Scene', 'sceneID', id, fields, values);
+  },
+
+  // Delete a scene
+  sceneDelete: async (_, { id }) => {
+    return deleteEntry('Scene', 'sceneID', id);
+  },
 };
 
 module.exports = sceneResolvers;

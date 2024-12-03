@@ -10,23 +10,23 @@ const userResolvers = require('./resolvers/UserResolvers.js');
 
 const resolvers = {
     Query: {
-        usersFindAll: userResolvers.usersFindAll,
+        userFindAll: userResolvers.userFindAll,
         userFindOne: userResolvers.userFindOne,
         categoryFindAll: categoryResolvers.categoryFindAll,
         categoryFindOne: categoryResolvers.categoryFindOne,
         commentFindOne: commentResolvers.commentFindOne,
-        commentsFindAll: commentResolvers.commentsFindAll,
-        notificationsFindAll: notificationResolvers.notificationsFindAll,
+        commentFindAll: commentResolvers.commentFindAll,
+        notificationFindAll: notificationResolvers.notificationFindAll,
         notificationFindOne: notificationResolvers.notificationFindOne,
-        requestsFindAll: requestResolvers.requestsFindAll,
+        requestFindAll: requestResolvers.requestFindAll,
         requestFindOne: requestResolvers.requestFindOne,
-        requirementsFindAll: requirementResolvers.requirementsFindAll,
+        requirementFindAll: requirementResolvers.requirementFindAll,
         requirementFindOne: requirementResolvers.requirementFindOne,
-        scenesFindAll: sceneResolvers.scenesFindAll,
+        sceneFindAll: sceneResolvers.sceneFindAll,
         sceneFindOne: sceneResolvers.sceneFindOne,
-        tagsFindAll: tagResolvers.tagsFindAll,
+        tagFindAll: tagResolvers.tagFindAll,
         tagFindOne: tagResolvers.tagFindOne,
-        transactionsFindAll: transactionResolvers.transactionsFindAll,
+        transactionFindAll: transactionResolvers.transactionFindAll,
         transactionFindOne: transactionResolvers.transactionFindOne
     },
     Mutation: {
@@ -42,26 +42,35 @@ const resolvers = {
         transactionCreate: transactionResolvers.transactionCreate,
 
         //Edit Mutations
-        // categoryEdit: categoryResolvers.categoryEdit,
-        // commentEdit: commentResolvers.commentEdit,
-        // notificationEdit: notificationResolvers.notificationEdit,
-        // requestEdit: requestResolvers.requestEdit,
-        // requirementEdit: requirementResolvers.requirementEdit,
-        // sceneEdit: sceneResolvers.sceneEdit,
-        // tagEdit: tagResolvers.tagEdit,
-        // transactionEdit: transactionResolvers.transactionEdit,
+        categoryEdit: categoryResolvers.categoryEdit,
+        commentEdit: commentResolvers.commentEdit,
+        notificationEdit: notificationResolvers.notificationEdit,
+        requestEdit: requestResolvers.requestEdit,
+        requirementEdit: requirementResolvers.requirementEdit,
+        sceneEdit: sceneResolvers.sceneEdit,
+        tagEdit: tagResolvers.tagEdit,
+        transactionEdit: transactionResolvers.transactionEdit,
         userEdit: userResolvers.userEdit,
 
         //Delete Mutations
-        // categoryDelete: categoryResolvers.categoryDelete,
-        // commentDelete: commentResolvers.commentDelete,
-        // notificationDelete: notificationResolvers.notificationDelete,
-        // requestDelete: requestResolvers.requestDelete,
-        // requirementDelete: requirementResolvers.requirementDelete,
-        // sceneDelete: sceneResolvers.sceneDelete,
-        // tagDelete: tagResolvers.tagDelete,
-        // transactionDelete: transactionResolvers.transactionDelete,
+        categoryDelete: categoryResolvers.categoryDelete,
+        commentDelete: commentResolvers.commentDelete,
+        notificationDelete: notificationResolvers.notificationDelete,
+        requestDelete: requestResolvers.requestDelete,
+        requirementDelete: requirementResolvers.requirementDelete,
+        sceneDelete: sceneResolvers.sceneDelete,
+        tagDelete: tagResolvers.tagDelete,
+        transactionDelete: transactionResolvers.transactionDelete,
         userDelete: userResolvers.userDelete
+    },
+    Request: {
+        scenes: requestResolvers.requestScenes,
+    },
+    User: {
+        requests: userResolvers.userRequests,
+        scenes: userResolvers.userScenes,
+        comments: userResolvers.userComments,
+        notifications: userResolvers.userNotifications
     }
 };
 

@@ -1,56 +1,38 @@
-const pool = require('../../db/db');
-const errorCatch = require('../errorCatch');
+const { createEntry, findAll, findOne, editEntry, deleteEntry } = require('./dbHelpers');
 
-const requirementResolvers = {};
+const requirementsResolvers = {
+  // Fetch all requirements
+  requirementFindAll: async () => {
+    return findAll('Requirement');
+  },
 
-// Queries to fetch entries in the DB table
-requirementResolvers.requirementsFindAll = async () => {
-    try {
-        const result = await pool.query('SELECT * FROM "Requirement"');
-        return result.rows;
-    } catch (err) {
-        errorCatch(err, 'Requirement', 'fetch');
-    }
+  // Fetch a single requirement by ID
+  requirementFindOne: async (_, { id }) => {
+    return findOne('Requirement', 'requirementID', id);
+  },
+
+  // Create a new requirement
+  requirementCreate: async (_, { input }) => {
+    const { requestID, type, text } = input;
+
+    // Define fields and values
+    const fields = ['requestID', 'type', 'text'];
+    const values = [requestID, type, text];
+
+    return createEntry('Requirement', fields, values);
+  },
+
+  // Edit an existing requirement
+  requirementEdit: async (_, { id, input }) => {
+    const fields = Object.keys(input);
+    const values = Object.values(input);
+    return editEntry('Requirement', 'requirementID', id, fields, values);
+  },
+
+  // Delete a requirement
+  requirementDelete: async (_, { id }) => {
+    return deleteEntry('Requirement', 'requirementID', id);
+  },
 };
 
-requirementResolvers.requirementFindOne = async (_, args) => {
-    try {
-        const query = `
-            SELECT *
-            FROM "Requirement"
-            WHERE "requirementID" = $1
-        `;
-        const values = [args.id];
-        const result = await pool.query(query, values);
-        return result.rows[0];
-    } catch (err) {
-        errorCatch(err, 'Requirement', 'fetch');
-    }
-};
-
-// Mutation to create or edit entries in the DB table
-requirementResolvers.requirementCreate = async (_, { input }, context) => {
-    const {
-        requestID,
-        type,
-        text
-    } = input;
-    try {
-        const query = `
-            INSERT INTO "Requirement" (
-                "requestID",
-                "type",
-                "text"
-            )
-            VALUES ($1, $2, $3)
-            RETURNING *
-        `;
-        const values = [requestID, type, text];
-        const result = await pool.query(query, values);
-        return result.rows[0];
-    } catch (err) {
-        errorCatch(err, 'Requirement', 'create');
-    }
-};
-
-module.exports = requirementResolvers;
+module.exports = requirementsResolvers;
