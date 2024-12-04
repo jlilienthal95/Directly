@@ -1,6 +1,8 @@
-const { createEntry, findAll, findOne, editEntry, deleteEntry } = require('./dbHelpers');
+const { createEntry, findAll, findOne, editEntry, deleteEntry, findAllByColumn } = require('./dbHelpers');
 
 const sceneResolvers = {
+
+  //BASIC CRUD OPERATIONS
   // Fetch all scenes
   sceneFindAll: async () => {
     return findAll('Scene');
@@ -23,7 +25,6 @@ const sceneResolvers = {
       resolution 
     } = input;
 
-    // Exclude dateSubmitted, as it will be handled by PostgreSQL automatically
     const fields = [
       'requestID',
       'createdByID',
@@ -42,8 +43,7 @@ const sceneResolvers = {
       duration,
       resolution
     ];
-
-    return createEntry('Scene', fields, values); // Let PostgreSQL handle dateSubmitted
+    return createEntry('Scene', fields, values);
   },
 
   // Edit an existing scene
@@ -57,6 +57,22 @@ const sceneResolvers = {
   sceneDelete: async (_, { id }) => {
     return deleteEntry('Scene', 'sceneID', id);
   },
+
+  //NESTED DATA RETURNED
+  //Fetch the User who created a scene
+  sceneCreatedBy: async (parent) => {
+    const result = await findAllByColumn('User', 'userID', parent.createdByID)
+    return result[0];
+  },
+
+  //Fetch all Comments on a scene
+  sceneComments: async (parent) => await findAllByColumn(
+      'Comment',
+      'relatedItemID',
+      parent.sceneID,
+      { additionalColumn: 'relatedItemType', additionalValue: 'Scene' }
+    ),
+  
 };
 
 module.exports = sceneResolvers;

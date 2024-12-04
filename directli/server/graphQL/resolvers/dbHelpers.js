@@ -66,11 +66,20 @@ async function deleteEntry(table, idColumn, id) {
 }
 
 // Fetch all rows from a table where a column matches a specific value
-async function findAllByColumn(table, columnName, value) {
-    const query = `SELECT * FROM "${table}" WHERE "${columnName}" = $1`;
-    return await executeQuery(query, [value], table, 'fetch');
+async function findAllByColumn(table, columnName, value, additionalCondition = {}) {
+    const { additionalColumn, additionalValue } = additionalCondition;
+    let query = `SELECT * FROM "${table}" WHERE "${columnName}" = $1`;
+    const values = [value];
+  
+    if (additionalColumn && additionalValue !== undefined) {
+      query += ` AND "${additionalColumn}" = $2`;
+      values.push(additionalValue);
+    }
+  
+    console.log('query:', query, 'values:', values);
+    return await executeQuery(query, values, table, 'fetch');
   }
-
+  
 module.exports = {
   findAll,
   findOne,

@@ -15,6 +15,8 @@ const typeDefs = `#graphql
     datePosted: String!
     text: String!
     likes: Int!
+    user: User
+    relatedItem: RelatedItem
   }
 
   type Notification {
@@ -38,6 +40,7 @@ const typeDefs = `#graphql
     postLenMax: Int!
     likes: Int!
     scenes: [Scene!]
+    comments: [Comment!]
   }
 
   type Requirement {
@@ -57,6 +60,8 @@ const typeDefs = `#graphql
     status: String!
     duration: Int!
     resolution: String!
+    createdBy: User
+    comments: [Comment!]
   }
 
   type Tag {
@@ -159,6 +164,9 @@ const typeDefs = `#graphql
     Approved,
     Rejected
   }
+
+  # Union types
+  union RelatedItem = Scene | Request
 `;
 
 

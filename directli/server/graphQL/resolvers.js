@@ -63,8 +63,28 @@ const resolvers = {
         transactionDelete: transactionResolvers.transactionDelete,
         userDelete: userResolvers.userDelete
     },
+    Comment: { 
+        user: commentResolvers.commentUser,
+        relatedItem: commentResolvers.commentRelatedItem,
+    },
     Request: {
         scenes: requestResolvers.requestScenes,
+        comments: requestResolvers.requestComments,
+    },
+    RelatedItem: {
+        __resolveType(obj) {
+          if (obj.sceneID) {
+            return 'Scene'; // Resolve to Scene if `sceneID` exists
+          }
+          if (obj.requestID) {
+            return 'Request'; // Resolve to Request if `requestID` exists
+          }
+          return null; // GraphQL will throw an error if this happens
+        },
+    },
+    Scene: {
+        createdBy: sceneResolvers.sceneCreatedBy,
+        comments: sceneResolvers.sceneComments,
     },
     User: {
         requests: userResolvers.userRequests,
