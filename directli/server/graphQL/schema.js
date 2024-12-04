@@ -26,6 +26,8 @@ const typeDefs = `#graphql
     relatedItemType: String!
     isRead: Boolean!
     dateCreated: String!
+    user: User
+    relatedItem: RelatedItem
   }
 
   type Request {
@@ -38,16 +40,19 @@ const typeDefs = `#graphql
     descript: String
     postLenMin: Int
     postLenMax: Int!
+    requirementIDs: [ID!]
     likes: Int!
-    scenes: [Scene!]
     comments: [Comment!]
+    requirements: [Requirement!] 
+    scenes: [Scene!]
+    user: User
   }
 
   type Requirement {
     requirementID: ID!
-    requestID: ID!
     type: String!
     text: String!
+    requests: [Request!]
   }
 
   type Scene {

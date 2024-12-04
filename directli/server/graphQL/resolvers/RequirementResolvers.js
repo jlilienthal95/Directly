@@ -1,6 +1,7 @@
-const { createEntry, findAll, findOne, editEntry, deleteEntry } = require('./dbHelpers');
+const { createEntry, findAll, findOne, editEntry, deleteEntry, findAllByColumn } = require('./dbHelpers');
 
 const requirementsResolvers = {
+  //BASIC CRUD OPERATIONS
   // Fetch all requirements
   requirementFindAll: async () => {
     return findAll('Requirement');
@@ -13,11 +14,11 @@ const requirementsResolvers = {
 
   // Create a new requirement
   requirementCreate: async (_, { input }) => {
-    const { requestID, type, text } = input;
+    const { type, text } = input;
 
     // Define fields and values
-    const fields = ['requestID', 'type', 'text'];
-    const values = [requestID, type, text];
+    const fields = ['type', 'text'];
+    const values = [type, text];
 
     return createEntry('Requirement', fields, values);
   },
@@ -33,6 +34,9 @@ const requirementsResolvers = {
   requirementDelete: async (_, { id }) => {
     return deleteEntry('Requirement', 'requirementID', id);
   },
+
+  //FETCHES NESTED DATA
+  // requirementRequests: async (parent) => findAllByColumn('Request', 'requestID', parent.requestID),
 };
 
 module.exports = requirementsResolvers;

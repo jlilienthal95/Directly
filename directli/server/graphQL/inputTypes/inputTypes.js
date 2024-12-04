@@ -30,11 +30,11 @@ const inputTypes = `#graphql
     descript: String
     postLenMin: Int
     postLenMax: Int!
+    requirementIDs: [ID!]
   }
 
   # Requirement Table Input
   input RequirementInput {
-    requestID: ID!
     type: String!
     text: String!
   }
@@ -113,7 +113,6 @@ const inputTypes = `#graphql
 
   # Edit Requirement Table Input (nullable fields for editing)
   input RequirementEditInput {
-    requestID: ID
     type: String
     text: String
   }

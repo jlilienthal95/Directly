@@ -2,26 +2,27 @@ const { findAll, findOne, createEntry, editEntry, deleteEntry, findAllByColumn }
 
 const commentResolvers = {
   //BASIC CRUD OPERATIONS
-  // Queries return entries in DB Table
-  commentFindAll: async () => 
-    findAll('Comment'), // Fetch all comments using the helper function
+  // Fetch all comments
+  commentFindAll: async () => findAll('Comment'),
 
-  commentFindOne: async (_, { id }) => 
-    findOne('Comment', 'commentID', id), // Fetch a single comment by ID using the helper function
+  // Fetch a single comment by ID
+  commentFindOne: async (_, { id }) => findOne('Comment', 'commentID', id),
 
-  // Mutations create or edit entries in DB
+  // Create a single comment
   commentCreate: async (_, { input }) => {
     const fields = Object.keys(input); // Extract fields from the input object
     const values = Object.values(input); // Extract values from the input object
     return createEntry('Comment', fields, values); // Create a new comment using the helper function
   },
 
+  // Edit a single comment, lookup by ID
   commentEdit: async (_, { id, input }) => {
     const fields = Object.keys(input); // Extract fields from the input object
     const values = Object.values(input); // Extract values from the input object
     return editEntry('Comment', 'commentID', id, fields, values); // Edit the comment using the helper function
   },
 
+  // Delete a single comment, lookup by ID
   commentDelete: async (_, { id }) => deleteEntry('Comment', 'commentID', id),
 
   //NESTED DATA RETURNED
@@ -31,6 +32,7 @@ const commentResolvers = {
     return result[0];
   },
 
+  //Fetch RelatedItem (Scene or Request type), return null if Account type
   commentRelatedItem: async (parent) => {
     if (parent.relatedItemType === 'Scene') {
       // Fetch and return the Scene data
@@ -42,8 +44,7 @@ const commentResolvers = {
       return request[0];  // Assuming findAllByColumn returns an array
     }
     return null;  // Return null if neither type is matched
-  }
-  
+  },
 
 };
 

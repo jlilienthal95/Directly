@@ -67,9 +67,9 @@ const resolvers = {
         user: commentResolvers.commentUser,
         relatedItem: commentResolvers.commentRelatedItem,
     },
-    Request: {
-        scenes: requestResolvers.requestScenes,
-        comments: requestResolvers.requestComments,
+    Notification: {
+        user: notificationResolvers.notificationUser,
+        relatedItem: notificationResolvers.notificationRelatedItem,
     },
     RelatedItem: {
         __resolveType(obj) {
@@ -81,6 +81,16 @@ const resolvers = {
           }
           return null; // GraphQL will throw an error if this happens
         },
+    },
+    Request: {
+        comments: requestResolvers.requestComments,
+        requirements: requestResolvers.requestRequirements,
+        requirementIDs: requestResolvers.requestRequirementIDs,
+        scenes: requestResolvers.requestScenes,
+        user: requestResolvers.requestUser,
+    },
+    Requirement: {
+        // requests: requirementResolvers.requirementRequests,
     },
     Scene: {
         createdBy: sceneResolvers.sceneCreatedBy,

@@ -1,6 +1,7 @@
-const { createEntry, findAll, findOne, editEntry, deleteEntry } = require('./dbHelpers');
+const { createEntry, findAll, findOne, editEntry, deleteEntry, findAllByColumn } = require('./dbHelpers');
 
 const notificationResolvers = {
+  //BASIC CRUD OPERATIONS
   // Fetch all notifications
   notificationFindAll: async () => {
     return findAll('Notification');
@@ -33,6 +34,29 @@ const notificationResolvers = {
   notificationDelete: async (_, { id }) => {
     return deleteEntry('Notification', 'notificationID', id);
   },
+
+  //FETCHES NESTED DATA
+
+  // Fetch User notification belongs to
+  notificationUser: async (parent) => {
+    const result = await findAllByColumn('User', 'userID', parent.userID);
+    return result[0];
+  },
+
+  // Fetch RelatedItem (Scene or Request), return nothing if Account Type
+  notificationRelatedItem: async (parent) => {
+    if (parent.relatedItemType === 'Scene') {
+      // Fetch and return the Scene data
+      const scene = await findAllByColumn('Scene', 'sceneID', parent.relatedItemID);
+      return scene[0];
+    } else if (parent.relatedItemType === 'Request') {
+      // Fetch and return the Request data
+      const request = await findAllByColumn('Request', 'requestID', parent.relatedItemID);
+      return request[0];
+    }
+    //Otherwise (it type is Account) return null
+    return null;
+  }
 };
 
 module.exports = notificationResolvers;
