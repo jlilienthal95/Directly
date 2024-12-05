@@ -61,7 +61,7 @@ const resolvers = {
         sceneDelete: sceneResolvers.sceneDelete,
         tagDelete: tagResolvers.tagDelete,
         transactionDelete: transactionResolvers.transactionDelete,
-        userDelete: userResolvers.userDelete
+        userDelete: userResolvers.userDelete,
     },
     Comment: { 
         user: commentResolvers.commentUser,

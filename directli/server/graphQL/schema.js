@@ -45,7 +45,14 @@ const typeDefs = `#graphql
     comments: [Comment!]
     requirements: [Requirement!] 
     scenes: [Scene!]
+    tags: [Tag!]
     user: User
+  }
+
+  type RequestTag {
+    requestTagID: ID!
+    requestID: ID!
+    tagID: ID!
   }
 
   type Requirement {
@@ -67,6 +74,13 @@ const typeDefs = `#graphql
     resolution: String!
     createdBy: User
     comments: [Comment!]
+    tags: [Tag!]
+  }
+
+  type SceneTag {
+    sceneTagID: ID!
+    sceneID: ID!
+    tagID: ID!
   }
 
   type Tag {
@@ -127,8 +141,10 @@ const typeDefs = `#graphql
     commentCreate(input: CommentInput): Comment
     notificationCreate(input: NotificationInput): Notification
     requestCreate(input: RequestInput): Request
+    requestTagsCreate(input: RequestTagsInput!): [RequestTag!]
     requirementCreate(input: RequirementInput): Requirement
     sceneCreate(input: SceneInput): Scene
+    sceneTagsCreate(input: SceneTagsInput!): [SceneTag!]
     tagCreate(input: TagInput): Tag
     transactionCreate(input: TransactionInput): Transaction
     userCreate(input: UserInput): User

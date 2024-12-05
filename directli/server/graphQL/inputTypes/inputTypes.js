@@ -31,6 +31,20 @@ const inputTypes = `#graphql
     postLenMin: Int
     postLenMax: Int!
     requirementIDs: [ID!]
+    tagIDs: [ID!]
+  }
+
+  #NEED TO IMPLEMENT THIS
+  # Request Requirements Join Table Input
+  input RequestRequirementsInput {
+    requestID: ID!
+    requirementIDs: [ID!]!
+  }
+
+  # Tag Request join table Inout
+  input RequestTagsInput {
+    requestID: ID!
+    tagIDs: [ID!]!
   }
 
   # Requirement Table Input
@@ -48,6 +62,13 @@ const inputTypes = `#graphql
     status: SceneStatus!
     duration: Int!
     resolution: String!
+    tagIDs: [ID!]
+  }
+
+  # Tag Scene join table Input
+  input SceneTagsInput {
+    sceneID: ID!
+    tagIDs: [ID!]!
   }
 
   # Tag Table Input

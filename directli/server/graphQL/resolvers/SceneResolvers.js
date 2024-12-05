@@ -1,7 +1,6 @@
 const { createEntry, findAll, findOne, editEntry, deleteEntry, findAllByColumn } = require('./dbHelpers');
 
 const sceneResolvers = {
-
   //BASIC CRUD OPERATIONS
   // Fetch all scenes
   sceneFindAll: async () => {
@@ -22,10 +21,11 @@ const sceneResolvers = {
       thumbnailUrl, 
       status, 
       duration, 
-      resolution 
+      resolution,
+      tagIDs
     } = input;
 
-    const fields = [
+    const sceneFields = [
       'requestID',
       'createdByID',
       'sceneUrl',
@@ -34,7 +34,7 @@ const sceneResolvers = {
       'duration',
       'resolution'
     ];
-    const values = [
+    const sceneValues = [
       requestID,
       createdByID,
       sceneUrl,
@@ -43,7 +43,20 @@ const sceneResolvers = {
       duration,
       resolution
     ];
-    return createEntry('Scene', fields, values);
+    const scene = await createEntry('Scene', sceneFields, sceneValues);
+    // If tagIDs are provided, insert them into the SceneTags join table
+    if (tagIDs && tagIDs.length > 0) {
+      await Promise.all(
+        tagIDs.map(async (tagID) => {
+          const sceneTagFields = ['sceneID', 'tagID'];
+          const sceneTagValues = [scene.sceneID, tagID];
+
+          // Use createEntry to insert into the SceneTags table
+          await createEntry('SceneTags', sceneTagFields, sceneTagValues);
+        })
+      );
+    }
+    return scene;
   },
 
   // Edit an existing scene
@@ -65,7 +78,7 @@ const sceneResolvers = {
     return result[0];
   },
 
-  //Fetch all Comments on a scene
+  // Fetch all Comments on a scene
   sceneComments: async (parent) => await findAllByColumn(
       'Comment',
       'relatedItemID',
@@ -73,6 +86,7 @@ const sceneResolvers = {
       { additionalColumn: 'relatedItemType', additionalValue: 'Scene' }
     ),
   
+
 };
 
 module.exports = sceneResolvers;
