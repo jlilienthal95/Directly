@@ -24,12 +24,12 @@ const inputTypes = `#graphql
   # Request Table Input
   input RequestInput {
     requestedByID: ID!
-    categoryID: ID
     title: String!
     brief: String
     descript: String
     postLenMin: Int
     postLenMax: Int!
+    categoryIDs: [ID!]
     requirementIDs: [ID!]
     tagIDs: [ID!]
   }

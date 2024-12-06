@@ -33,18 +33,20 @@ const typeDefs = `#graphql
   type Request {
     requestID: ID!
     requestedByID: ID!
-    categoryID: ID
     title: String!
     datePosted: String!
     brief: String
     descript: String
     postLenMin: Int
     postLenMax: Int!
-    requirementIDs: [ID!]
     likes: Int!
+    categoryIDs: [ID!]
+    categories: [Category!]
     comments: [Comment!]
+    requirementIDs: [ID!]
     requirements: [Requirement!] 
     scenes: [Scene!]
+    tagIDs: [ID!]
     tags: [Tag!]
     user: User
   }

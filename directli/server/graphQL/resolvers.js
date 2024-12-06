@@ -83,10 +83,14 @@ const resolvers = {
         },
     },
     Request: {
+        categoryIDs: requestResolvers.requestCategoryIDs,
+        categories: requestResolvers.requestCategories,
         comments: requestResolvers.requestComments,
         requirements: requestResolvers.requestRequirements,
         requirementIDs: requestResolvers.requestRequirementIDs,
         scenes: requestResolvers.requestScenes,
+        tags: requestResolvers.requestTags,
+        tagIDs: requestResolvers.requestTagIDs,
         user: requestResolvers.requestUser,
     },
     Requirement: {
