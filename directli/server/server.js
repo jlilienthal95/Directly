@@ -1,53 +1,57 @@
-// server.js
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const client = require('./db/db');
 const graphqlMiddleware = require('./graphQL/index');
+const userRoutes = require('./routes/userRoutes');
 
 const PORT = 3000;
 const app = express();
 
-// Set up GraphQL route
-app.use('/graphql', graphqlMiddleware);
+app.use('/user', userRoutes, graphqlMiddleware);
 
-// Set up proxy middleware for all other requests
-app.use(
-  (req, res, next) => {
-    if (req.path.startsWith('/graphql')) return next();
-    createProxyMiddleware({
-      target: 'http://localhost:5173',
-      changeOrigin: true,
-    })(req, res, next);
-  }
-);
-
-// Example route for inserting a post
-// app.get('/post', async (req, res, next) => {
-//   console.log('/post request received');
-//   const details = {
-//     title: 'Make a confession!',
-//     author: 'DatBoi2006',
-//     date: new Date(),
-//     brief: 'Time to confess!',
-//     postLenMin: 20,
-//     postLenMax: 40,
+// Middleware to route /user/:id to GraphQL
+// app.use('/user/:id', (req, res, next) => {
+//   req.url = `/graphql`;
+//   req.body = {
+//     query: `
+//       query getUser($id: ID!) {
+//         userFindOne(id: $id) {
+//           userID
+//           nameFirst
+//           nameLast
+//           displayName
+//           email
+//           dob
+//           bio
+//         }
+//       }
+//     `,
+//     variables: { id: req.params.id },
 //   };
-//   const values = [details.title, details.author, details.date, details.brief, details.postLenMin, details.postLenMax];
+//   next();
+// }, graphqlMiddleware);
 
-//   const q = `
-//     INSERT INTO "Post" ("title", "author", "date", "brief", "postLenMin", "postLenMax")
-//     VALUES($1, $2, $3, $4, $5, $6)
-//     RETURNING *
-//   `;
-  
-//   try {
-//     const result = await client.query(q, values);
-//     console.log('result:', result.rows);
-//     res.json(result.rows[0]); // Respond with the created post
-//   } catch (err) {
-//     next(err);
-//   }
-// });
+// Apply the GraphQL middleware
+// app.use(graphqlMiddleware);
+
+// Use routes for each data Entity
+app.use('/user', (req, res, next) => {
+  console.log('user route');
+  next()
+}, userRoutes);
+
+// Set up proxy middleware
+const proxy = createProxyMiddleware({
+  target: 'http://localhost:5173',
+  changeOrigin: true,
+});
+
+
+// Use proxy middleware for all requests besides graphql
+app.use((req, res, next) => {
+  if (req.path.startsWith('/graphql')) return next();
+  proxy(req, res, next);
+});
+
 
 // 404 error handling
 app.use('*', (req, res) => res.status(404).send('404ed!'));

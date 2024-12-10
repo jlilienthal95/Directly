@@ -122,7 +122,7 @@ async function findAllByColumn(table, columnName, value, additionalCondition = {
   }
 }
 
-// Fetch all rows from a join table and return the associated ID
+// Fetch all rows matching ID from a join table and return the associated ID
 async function findIDsFromJoinTable(joinTable, inputColumn, ID, returnColumn) {
   try {
     let IDs = [];

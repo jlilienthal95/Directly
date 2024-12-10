@@ -62,6 +62,7 @@ const inputTypes = `#graphql
     status: SceneStatus!
     duration: Int!
     resolution: String!
+    categoryIDs: [ID!]
     tagIDs: [ID!]
   }
 

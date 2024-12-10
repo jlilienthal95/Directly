@@ -75,7 +75,10 @@ const typeDefs = `#graphql
     duration: Int!
     resolution: String!
     createdBy: User
+    categoryIDs: [ID!]
+    categories: [Category!]
     comments: [Comment!]
+    tagIDs: [ID!]
     tags: [Tag!]
   }
 

@@ -97,14 +97,18 @@ const resolvers = {
         // requests: requirementResolvers.requirementRequests,
     },
     Scene: {
+        categoryIDs: sceneResolvers.sceneCategoryIDs,
+        categories: sceneResolvers.sceneCategories,
         createdBy: sceneResolvers.sceneCreatedBy,
         comments: sceneResolvers.sceneComments,
+        tagIDs: sceneResolvers.sceneTagIDs,
+        tags: sceneResolvers.sceneTags,
     },
     User: {
         requests: userResolvers.userRequests,
         scenes: userResolvers.userScenes,
         comments: userResolvers.userComments,
-        notifications: userResolvers.userNotifications
+        notifications: userResolvers.userNotifications,
     }
 };
 
