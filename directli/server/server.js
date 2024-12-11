@@ -1,43 +1,11 @@
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const graphqlMiddleware = require('./graphQL/index');
-const userRoutes = require('./routes/userRoutes');
 
 const PORT = 3000;
 const app = express();
 
-app.use('/user', userRoutes, graphqlMiddleware);
-
-// Middleware to route /user/:id to GraphQL
-// app.use('/user/:id', (req, res, next) => {
-//   req.url = `/graphql`;
-//   req.body = {
-//     query: `
-//       query getUser($id: ID!) {
-//         userFindOne(id: $id) {
-//           userID
-//           nameFirst
-//           nameLast
-//           displayName
-//           email
-//           dob
-//           bio
-//         }
-//       }
-//     `,
-//     variables: { id: req.params.id },
-//   };
-//   next();
-// }, graphqlMiddleware);
-
-// Apply the GraphQL middleware
-// app.use(graphqlMiddleware);
-
-// Use routes for each data Entity
-app.use('/user', (req, res, next) => {
-  console.log('user route');
-  next()
-}, userRoutes);
+app.use('/graphql', graphqlMiddleware);
 
 // Set up proxy middleware
 const proxy = createProxyMiddleware({
@@ -45,10 +13,9 @@ const proxy = createProxyMiddleware({
   changeOrigin: true,
 });
 
-
 // Use proxy middleware for all requests besides graphql
 app.use((req, res, next) => {
-  if (req.path.startsWith('/graphql')) return next();
+  // if (req.path.startsWith('/graphql')) return next();
   proxy(req, res, next);
 });
 
